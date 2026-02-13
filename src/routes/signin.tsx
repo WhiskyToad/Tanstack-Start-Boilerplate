@@ -1,14 +1,15 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import type { ComponentProps } from "react";
 import { Button } from "~/lib/components/ui/button";
 import { cn } from "~/lib/utils";
-import { useState } from "react";
 import { Input } from "~/lib/components/ui/input";
 import { Label } from "~/lib/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/lib/components/ui/card";
-import { useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import authClient from "~/lib/auth-client";
+import { useForm } from "@tanstack/react-form";
+import { z } from "zod";
+import { zodValidator } from "@tanstack/zod-form-adapter";
 
 const REDIRECT_URL = "/dashboard";
 
@@ -63,30 +64,36 @@ export const Route = createFileRoute("/signin")({
 
 function AuthPage() {
   const search = Route.useSearch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  const form = useForm({
+    validatorAdapter: zodValidator(),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: async ({ value }) => {
+      const result = await signInFn({ data: value });
+
+      if (result && result.error) {
+        throw new Error(result.message || "Authentication failed");
+      }
+
+      await router.invalidate();
+      router.navigate({ to: REDIRECT_URL });
+    },
+  });
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+    form.setFieldMeta("email", (prev) => ({ ...prev, isTouched: true }));
+    form.setFieldMeta("password", (prev) => ({ ...prev, isTouched: true }));
+
     try {
-      const result = await signInFn({ data: { email, password } });
-      
-      if (result && result.error) {
-        setError(result.message || "Authentication failed");
-      } else {
-        await router.invalidate();
-        router.navigate({ to: REDIRECT_URL });
-      }
-    } catch (error) {
-      console.error("Sign in error:", error);
-      setError("An unexpected error occurred");
-    } finally {
-      setIsLoading(false);
+      await form.handleSubmit();
+    } catch (err) {
+      // errors are shown inline below
+      console.error("Sign in error:", err);
     }
   };
 
@@ -106,32 +113,74 @@ function AuthPage() {
             </div>
           )}
           <form onSubmit={handleEmailSignIn} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && <div className="text-sm text-red-500">{error}</div>}
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign in with Email"}
-            </Button>
+            <form.Field
+              name="email"
+              validators={{
+                onChange: z
+                  .string()
+                  .email("Enter a valid email")
+                  .min(1, "Email is required"),
+              }}
+            >
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor={field.name}>Email</Label>
+                  <Input
+                    id={field.name}
+                    type="email"
+                    placeholder="Enter your email"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && field.state.meta.errors?.length ? (
+                    <div className="text-sm text-red-500">
+                      {field.state.meta.errors[0]}
+                    </div>
+                  ) : null}
+                </div>
+              )}
+            </form.Field>
+
+            <form.Field
+              name="password"
+              validators={{
+                onChange: z
+                  .string()
+                  .min(8, "Password must be at least 8 characters"),
+              }}
+            >
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor={field.name}>Password</Label>
+                  <Input
+                    id={field.name}
+                    type="password"
+                    placeholder="Enter your password"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && field.state.meta.errors?.length ? (
+                    <div className="text-sm text-red-500">
+                      {field.state.meta.errors[0]}
+                    </div>
+                  ) : null}
+                </div>
+              )}
+            </form.Field>
+
+            {form.state.submissionAttempts > 0 && form.state.errors?.length ? (
+              <div className="text-sm text-red-500">{form.state.errors[0] as any}</div>
+            ) : null}
+
+            <form.Subscribe selector={(state) => [state.isSubmitting]}>
+              {([isSubmitting]) => (
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? "Signing in..." : "Sign in with Email"}
+                </Button>
+              )}
+            </form.Subscribe>
           </form>
 
           <div className="relative">

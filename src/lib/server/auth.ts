@@ -1,33 +1,33 @@
 import { createServerClient } from '@supabase/ssr'
 import { getCookies, setCookie } from '@tanstack/react-start/server'
 
-// Make sure environment variables are defined
-const supabaseUrl = process.env.VITE_SUPABASE_URL as string
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY as string
-
-if (!supabaseUrl) throw new Error('Missing VITE_SUPABASE_URL')
-if (!supabaseAnonKey) throw new Error('Missing VITE_SUPABASE_ANON_KEY')
-
+/**
+ * Server-side Supabase client with cookie bridging.
+ *
+ * Important: don't throw at module load time (build/dev can run without env).
+ */
 export function getSupabaseServerClient() {
-  return createServerClient(
-    supabaseUrl,
-    supabaseAnonKey,
-    {
-      cookies: {
-        getAll() {
-          return Object.entries(getCookies()).map(([name, value]) => ({
-            name,
-            value,
-          }))
-        },
-        setAll(cookies: Array<{ name: string; value: string }>) {
-          cookies.forEach((cookie) => {
-            setCookie(cookie.name, cookie.value)
-          })
-        },
+  const supabaseUrl = process.env.SUPABASE_URL
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY
+
+  if (!supabaseUrl) throw new Error('Missing SUPABASE_URL')
+  if (!supabaseAnonKey) throw new Error('Missing SUPABASE_ANON_KEY')
+
+  return createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return Object.entries(getCookies()).map(([name, value]) => ({
+          name,
+          value,
+        }))
       },
-    }
-  )
+      setAll(cookies: Array<{ name: string; value: string }>) {
+        cookies.forEach((cookie) => {
+          setCookie(cookie.name, cookie.value)
+        })
+      },
+    },
+  })
 }
 
 export const auth = {
