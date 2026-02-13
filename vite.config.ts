@@ -14,18 +14,9 @@ export default defineConfig({
     }),
     tailwindcss(),
     tanstackStart(),
-    viteReact({
-      babel: {
-        plugins: [
-          [
-            "babel-plugin-react-compiler",
-            {
-              target: "19",
-            },
-          ],
-        ],
-      },
-    }),
+    // NOTE: React Compiler plugin is still beta and has caused build-time
+    // crashes in some environments. Keep it off for now.
+    viteReact(),
   ],
 });
 
