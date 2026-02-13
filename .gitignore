@@ -18,5 +18,5 @@ dist
 /server/build
 /public/build
 
-# docker-compose db
-db
+# docker-compose db (only ignore the root db folder)
+/db
