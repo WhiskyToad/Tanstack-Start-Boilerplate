@@ -8,7 +8,7 @@
     "start": "vite start",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "ui": "pnpm dlx shadcn@canary",
+    "ui": "npx -y shadcn@canary",
     "db:seed": "supabase db reset"
   },
   "dependencies": {

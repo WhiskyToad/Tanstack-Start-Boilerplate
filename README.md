@@ -16,19 +16,19 @@ A minimal starter template for 🏝️ TanStack Start with Supabase authenticati
 
 2. Install dependencies:
    ```bash
-   pnpm install # npm install
+   npm install
    ```
 
 3. Create a `.env` file based on [`.env.example`](./.env.example) and add your Supabase credentials:
    ```env
-   VITE_SUPABASE_URL=your_supabase_project_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+   SUPABASE_URL=your-project-url
+   SUPABASE_ANON_KEY=your-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=
    ```
 
 4. Run the development server:
    ```bash
-   pnpm dev # npm run dev
+   npm run dev
    ```
    The development server should be now running at [http://localhost:3000](http://localhost:3000).
 
@@ -38,12 +38,12 @@ This template includes a database seeding system using Supabase. To seed the dat
 
 1. Link your project (if not already linked):
    ```bash
-   pnpm supabase link --project-ref your-project-ref
+   npx supabase link --project-ref your-project-ref
    ```
 
 2. Run the seed command:
    ```bash
-   pnpm db:seed
+   npm run db:seed
    ```
 
 This will reset your database and apply the seed data defined in `supabase/seed.sql`. The seed file includes sample todos that you can use as a starting point.
@@ -124,9 +124,7 @@ For more information, read the [Supabase MCP Article](https://supabase.com/docs/
 
 ## Scripts
 
-These scripts in [package.json](./package.json#L5) use **pnpm** by default, but you can modify them to use your preferred package manager.
-
-- **`ui`** - The shadcn/ui CLI. (e.g. `pnpm ui add button` to add the button component)
+- **`ui`** - The shadcn/ui CLI. (e.g. `npm run ui add button` to add the button component)
 - **`format`** and **`lint`** - Run Prettier and ESLint.
 
 ## Building for production
