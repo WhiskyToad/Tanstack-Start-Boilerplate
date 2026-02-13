@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "lint": "biome check .",
-    "jobs": "bunx trigger.dev@beta dev",
+    "jobs": "npx -y trigger.dev@beta dev",
     "format": "biome format --write .",
     "typecheck": "tsc --noEmit"
   },

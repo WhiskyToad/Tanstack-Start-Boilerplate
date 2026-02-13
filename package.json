@@ -6,12 +6,12 @@
     "@biomejs/biome": "1.8.3",
     "@t3-oss/env-core": "^0.12.0",
     "turbo": "2.1.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.7.3"
   },
-  "packageManager": "bun@1.1.26",
+  "packageManager": "npm@10.9.4",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build": "turbo build --filter=!@z1/email",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "dev": "turbo dev --parallel",
@@ -28,12 +28,16 @@
     "sb:stop": "turbo run stop --filter=@z1/api",
     "test": "turbo test --parallel",
     "format": "biome format --write .",
-    "lint": "turbo lint && bun lint:repo",
-    "lint:repo": "bunx sherif@latest",
-    "lint:repo:fix": "bunx sherif@latest --fix",
+    "lint": "turbo lint && npm run lint:repo",
+    "lint:repo": "npx -y sherif@latest",
+    "lint:repo:fix": "npx -y sherif@latest --fix",
     "typecheck": "turbo typecheck"
   },
-  "workspaces": ["packages/*", "apps/*", "tooling/*"],
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "tooling/*"
+  ],
   "trustedDependencies": [
     "@biomejs/biome",
     "@parcel/watcher",
@@ -43,5 +47,8 @@
     "protobufjs",
     "sharp",
     "supabase"
-  ]
+  ],
+  "overrides": {
+    "@tanstack/router-generator": "1.120.20"
+  }
 }

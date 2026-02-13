@@ -11,15 +11,15 @@
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
-    "@z1/logger": "workspace:*",
+    "@supabase/supabase-js": "^2.48.1",
+    "@z1/logger": "*",
     "react": "^19.0.0",
     "server-only": "^0.0.1",
-    "supabase": "^2.12.1",
     "vinxi": "0.5.3"
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.48.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.7.3"
   },
   "exports": {
     "./client": "./src/client.ts",

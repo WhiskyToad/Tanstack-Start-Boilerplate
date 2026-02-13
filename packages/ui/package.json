@@ -16,7 +16,6 @@
     "format": "biome --write .",
     "typecheck": "tsc --noEmit"
   },
-  "devDependencies": {},
   "exports": {
     "./globals.css": "./src/globals.css",
     "./postcss": "./postcss.config.js",

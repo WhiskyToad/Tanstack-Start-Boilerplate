@@ -25,10 +25,10 @@ function Home() {
         </div>
         <div className="mt-8 gap-3 flex justify-center">
           <Button
-            onClick={() => copyToClipboard("bunx degit guidovizoso/z1 z1")}
+            onClick={() => copyToClipboard("npx -y degit guidovizoso/z1 z1")}
             size="lg"
           >
-            bunx degit guidovizoso/z1 z1
+            npx -y degit guidovizoso/z1 z1
           </Button>
         </div>
       </div>
