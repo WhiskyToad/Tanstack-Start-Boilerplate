@@ -1,20 +1,64 @@
-node_modules
-package-lock.json
-yarn.lock
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+next-env.d.ts
+
+# expo
+.expo/
+dist/
+
+# production
+build
+
+# misc
 .DS_Store
-.cache
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
 .env
+.env*.local
+
+# vercel
 .vercel
-.output
-.nitro
-/build/
-/api/
-/server/build
-/public/build# Sentry Config File
-.env.sentry-build-plugin
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-.tanstack
+
+# typescript
+*.tsbuildinfo
+
+# turbo
+.turbo
+
+# react-email
+.react-email
+packages/email/public
+!packages/email/public/.gitkeep
+!packages/email/.react-email/.gitkeep
+
+# Storybook
+storybook-static
+tailwind.css
+
+# Supabase
+.branches
+.temp
+
+# Trigger
+.trigger
+
+# Vinxi
+*.vinxi
