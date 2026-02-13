@@ -1,14 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
 
-if (!process.env.SUPABASE_URL) throw new Error('Missing SUPABASE_URL')
-if (!process.env.SUPABASE_ANON_KEY) throw new Error('Missing SUPABASE_ANON_KEY')
+function requireEnv(name: string): string {
+  const v = process.env[name]
+  if (!v) throw new Error(`Missing ${name}`)
+  return v
+}
 
-export const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-)
+export function getSupabaseAnonClient() {
+  return createClient(requireEnv('SUPABASE_URL'), requireEnv('SUPABASE_ANON_KEY'))
+}
 
-export const serviceRoleClient = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY as string
-)
+export function getSupabaseServiceRoleClient() {
+  return createClient(
+    requireEnv('SUPABASE_URL'),
+    requireEnv('SUPABASE_SERVICE_ROLE_KEY')
+  )
+}
+
